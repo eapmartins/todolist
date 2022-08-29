@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:todolist/model/domain/todo.dart';
+import 'package:todolist/presentation/list/presenter.dart';
+import 'package:todolist/presentation/todos.dart';
 
-import '../add/add_todo_page.dart';
-import '../todo_list_notifier.dart';
 
 class TodoListPage extends StatelessWidget {
-  const TodoListPage({Key? key}) : super(key: key);
+  final ListPresenter presenter;
+  const TodoListPage({Key? key, required this.presenter}) : super(key: key);
 
   @override
   Widget build(final BuildContext context) {
@@ -30,9 +32,8 @@ class TodoListPage extends StatelessWidget {
 
   Widget _buildTodoListWidget() {
     return Consumer(
-      builder: (context, ref, child) {
+      builder: (context, ref, snapshot) {
         final todos = ref.watch(todosProvider);
-
         return ListView.builder(
           padding: const EdgeInsets.all(8),
           itemCount: todos.length,
@@ -42,7 +43,7 @@ class TodoListPage extends StatelessWidget {
             return _buildTodoItemCardWidget(context, todos[index]);
           },
         );
-      },
+      }
     );
   }
 }
@@ -84,12 +85,7 @@ Widget _buildTodoItemCardWidget(BuildContext context, Todo todo) {
 
 Widget _buildFloatingActionButton(final BuildContext context) {
   return FloatingActionButton(
-    onPressed: () => Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const TodoFormPage(),
-      ),
-    ),
+    onPressed: () => Get.toNamed("/add"),
     child: const Icon(Icons.add),
   );
 }
